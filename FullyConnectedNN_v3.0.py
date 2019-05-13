@@ -133,7 +133,7 @@ def Feedforword(X, Weights, biases, activation_choice):
     :return: zs → 各层神经元输入向量，列表；ys → 各层神经元激活值，列表，第1层zs[0]=ys[0]=X
     :return: Weights, biases：当前网络参数，供当前BackPropagation()更新参数
     """
-    # 输入层神经元输入与激活值都认为是X，也存入列表，BP时用到
+    # 输入层神经元输入与激活值都认为是X，也存入列表，BP时需用到
     zs = [X]
     ys = [X]
 
@@ -166,13 +166,14 @@ def BackPropagation(zs, ys, y, Weights, biases, learning_rate, activation_choice
     # # 查看更新前参数 Weights
     # for W_idx, Weight in enumerate(Weights):
     #     print(W_idx, ": ", Weight)
+
     '''Step1 计算各层梯度并存储'''
     L = len(zs)
     dWs = []
     dbs = []
     m = ys[-1].shape[1]
 
-    '''Step1.1 计算第L层的梯度，注意由于数据是全部输入Batch GD(当然也可以做成mini-batch GD)，因此需要做梯度平均'''
+    '''Step1.1 计算第L层的梯度，注意由于数据是一次输入多个，因此需要做梯度平均'''
     delta = ys[-1] - y  # 文3-式(2.1) δ^L 注意由于有m个数据，因此形成了矩阵Δ∈R^{n_L x m}.
     dW_L = np.dot(delta, ys[-2].T) / m  # 文3-式(2.1)
     dWs.append(dW_L)
@@ -216,8 +217,7 @@ def train_model(iterations, X, y, layer_structure, learning_rate, activation_cho
     """
     通过上面Feedforward()和Backpropagation()训练网络-Batch GD
     :param iterations: 迭代次数
-    :param Weights: 初始权重参数
-    :param biases: 初始偏置
+    :param layer_structure: 网络结构参数
     :param X: 训练数据
     :param y: 真实标签
     :param activation_choice: 隐藏层激活函数类型
@@ -270,9 +270,10 @@ def train_model_minibatch(epochs, mini_batch_size, X, y, layer_structure, learni
             Weights, biases = BackPropagation(zs, ys, y_mini_batches[k], Weights, biases, learning_rate, activation_choice)
 
             """ 计算误差 注意Loss计算时数据量的选择 """
-            _, ys_batch, _, _ = Feedforword(X, Weights, biases, activation_choice)
-            cost = CrossEntropyLoss(ys[-1], y_mini_batches[k])  # mini-batch后的Loss, 每个mini都记录
-            # cost = CrossEntropyLoss(ys_batch[-1], y)  # 用整个batch计算Loss
+            cost = CrossEntropyLoss(ys[-1], y_mini_batches[k])  # 用mini-batch计算Loss, 每个mini都记录
+            # 用整个batch计算Loss
+            # _, ys_batch, _, _ = Feedforword(X, Weights, biases, activation_choice)
+            # cost = CrossEntropyLoss(ys_batch[-1], y)
 
             """ 不同分辨率记录Loss """
             # costs.append(cost)  # Resolution1: 每个Epoch，所有mini-batch记录一次
@@ -322,10 +323,10 @@ def plot_decision_boundary(pred_func):
 if __name__=='__main__':
     """ 生成数据. 采用CS231 demo中的3分类数据 """
     np.random.seed(1)
-    N = 200  # 每个类中的样本点，3类共N * K点，每点D=2维
+    N = 50  # 每个类中的样本点，3类共N * K点，每点D=2维
     D = 2  # 每个点2个维度/属性
     K = 3  # 类别数
-    X = np.zeros((N * K, D))  # 样本input (300, 2), data matrix (each row = single example)
+    X = np.zeros((N * K, D))  # 样本维度 (300, 2), data matrix (each row = single example)
     y = np.zeros(N * K)  # 类别标签
     for j in range(K):
         ix = range(N * j, N * (j + 1))
@@ -360,12 +361,12 @@ if __name__=='__main__':
     start_time = datetime.datetime.now()
 
     # Batch GD
-    # Weights_trained, biases_trained, costs = train_model(iterations, X.T, expected_output,
-    #                                                      layer_structure, learning_rate, activation_choice)
+    Weights_trained, biases_trained, costs = train_model(iterations, X.T, expected_output,
+                                                         layer_structure, learning_rate, activation_choice)
 
     # Mini-Batch GD
-    Weights_trained, biases_trained, costs = train_model_minibatch(epochs, mini_batch_size, X.T, expected_output,
-                                                                   layer_structure, learning_rate, activation_choice)
+    # Weights_trained, biases_trained, costs = train_model_minibatch(epochs, mini_batch_size, X.T, expected_output,
+    #                                                                layer_structure, learning_rate, activation_choice)
 
     end_time = datetime.datetime.now()
     duration = end_time - start_time
@@ -386,7 +387,7 @@ if __name__=='__main__':
     plt.xlabel('Iterations. Model Accuracy is %.5f' % accuracy)
     plt.ylabel('Cross Entropy Loss')
     plt.title('{}: Minimum Error is %.3f, Time Cost is %.3fs'.format(activation_choice.title()) % (min(costs), time_cost))
-    plt.grid()  # 显示网格
+    plt.grid()
     plt.show()
 
 
