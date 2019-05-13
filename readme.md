@@ -8,7 +8,7 @@
 functions:
 
 - train_model(iterations, X, y, layer_structure, learning_rate, activation_choice)
-"""
+```py
     Description: train model using Batch GD optimizer
     :param iterations: iteration times
     :param layer_structure: Network Parms, including layers, numbers of Neuron of each layer
@@ -16,10 +16,10 @@ functions:
     :param y: label, one-hot form
     :param activation_choice: activation function of hidden layers
     :return: the trained model param: Weights, biases; costs
-"""
+```
 
 - train_model_minibatch(epochs, mini_batch_size, X, y, layer_structure, learning_rate, activation_choice)
-"""
+```py
     Description: train model using Mini-Batch GD optimizer 
     :param epochs: iteration times of the whole training set
     :param mini_batch_size: as the name
@@ -28,4 +28,4 @@ functions:
     :param layerstructure: Network Parms, including layers, numbers of Neuron of each layer
     :param activation_choice: activation_choice: activation function of hidden layers
     :return: the trained model param: Weights, biases; costs
-"""
+```
