@@ -22,7 +22,7 @@ functions:
 ```py
     Description: train model using Mini-Batch GD optimizer 
     :param epochs: iteration times of the whole training set
-    :param mini_batch_size: as the name
+    :param mini_batch_size: as the variable name
     :param X: Training set, row vector for each data
     :param y: label, one-hot form
     :param layerstructure: Network Parms, including layers, numbers of Neuron of each layer
