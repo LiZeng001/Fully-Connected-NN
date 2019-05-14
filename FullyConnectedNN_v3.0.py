@@ -137,7 +137,7 @@ def Feedforword(X, Weights, biases, activation_choice):
     zs = [X]
     ys = [X]
 
-    # 文2-式(2.2) 第2,...,L-1层. 输出层不做Activation，做Softmax，与文2中略有改动. 参考文3-Chap2
+    # 文2-式(2.2) 第2,...,L-1层. 输出层不做activation，做Softmax，与文2中略有改动. 参考文3-Chap2
     y = X
     for W, b in zip(Weights[: -1], biases[: -1]):  # 注意 z, y 均为n_l x K 维矩阵. K是每次Feed的数据量
         z = np.dot(W, y) + b
@@ -347,7 +347,7 @@ if __name__=='__main__':
 
     """ 设置模型结构参数 """
     layer_structure = [2, 25, 25, 3]
-    activation_choice = 'relu'
+    activation_choice = 'tanh'
     iterations = 25001
     learning_rate = 0.008
     """ mini-batch参数 """
@@ -358,12 +358,12 @@ if __name__=='__main__':
     start_time = datetime.datetime.now()
 
     # Batch GD
-    # Weights_trained, biases_trained, costs = train_model(iterations, X.T, expected_output,
-    #                                                      layer_structure, learning_rate, activation_choice)
+    Weights_trained, biases_trained, costs = train_model(iterations, X.T, expected_output,
+                                                         layer_structure, learning_rate, activation_choice)
 
-    # Mini-Batch GD
-    Weights_trained, biases_trained, costs = train_model_minibatch(epochs, mini_batch_size, X.T, expected_output,
-                                                                   layer_structure, learning_rate, activation_choice)
+    # # Mini-Batch GD
+    # Weights_trained, biases_trained, costs = train_model_minibatch(epochs, mini_batch_size, X.T, expected_output,
+    #                                                                layer_structure, learning_rate, activation_choice)
 
     end_time = datetime.datetime.now()
     duration = end_time - start_time
@@ -380,7 +380,7 @@ if __name__=='__main__':
     plot_decision_boundary(lambda x: predict(x, Weights_trained, biases_trained, activation_choice))
 
     plt.subplot(122)
-    plt.scatter(list(range(len(costs))), costs, s=1, c='orange', marker='.')  # 散点图
+    plt.scatter(list(range(len(costs))), costs, s=1, c='orange', marker='.')
     plt.xlabel('Iterations. Model Accuracy is %.5f' % accuracy)
     plt.ylabel('Cross Entropy Loss')
     plt.title('{}: Minimum Error is %.3f, Time Cost is %.3fs'.format(activation_choice.title()) % (min(costs), time_cost))
