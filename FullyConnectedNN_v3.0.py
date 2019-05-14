@@ -13,7 +13,7 @@
     ▸ 2. 说明：代码中公式对应知乎专栏：
          文1：https://zhuanlan.zhihu.com/p/64202456
          文2：https://zhuanlan.zhihu.com/p/61531989
-         文3：文2末链接
+         文3：https://zhuanlan.zhihu.com/p/65679447
 """
 
 import numpy as np
@@ -137,16 +137,16 @@ def Feedforword(X, Weights, biases, activation_choice):
     zs = [X]
     ys = [X]
 
-    # 文2-式(2.2) 第2,...,L-1层. 输出层不做activation，做Softmax，与文2中略有改动. 参考文3-Chap2
+    # 文2-式(2.2) 第2,...,L-1层. 输出层不做Activation，做Softmax，与文2中略有改动. 参考文3-Chap2
     y = X
     for W, b in zip(Weights[: -1], biases[: -1]):  # 注意 z, y 均为n_l x K 维矩阵. K是每次Feed的数据量
         z = np.dot(W, y) + b
-        zs.append(z)  # 存放神经元输入
+        zs.append(z)  # 存放隐藏层神经元输入
         y = activation(z, activation_choice)
-        ys.append(y)  # 存放神经元激活值(由activation_func激活)
+        ys.append(y)  # 存放隐藏层神经元激活值(由activation_func激活)
 
     # 第L层 文2-式(3.9) 这里变量名比较啰嗦，主要是为了便于理解.
-    z_L = np.dot(Weights[-1], y)
+    z_L = np.dot(Weights[-1], y) + biases[-1]
     zs.append(z_L)  # 存放输出层神经元输入
     y_L = softmax(z_L)
     ys.append(y_L)  # 存放输出层神经元输出，由softmax激活
