@@ -270,7 +270,7 @@ def train_model_minibatch(epochs, mini_batch_size, X, y, layer_structure, learni
             Weights, biases = BackPropagation(zs, ys, y_mini_batches[k], Weights, biases, learning_rate, activation_choice)
 
             """ 计算误差 注意Loss计算时数据量的选择 """
-            cost = CrossEntropyLoss(ys[-1], y_mini_batches[k])  # 用mini-batch计算Loss, 每个mini都记录
+            cost = CrossEntropyLoss(ys[-1], y_mini_batches[k])  # 用mini-batch计算Loss
             # 用整个batch计算Loss
             # _, ys_batch, _, _ = Feedforword(X, Weights, biases, activation_choice)
             # cost = CrossEntropyLoss(ys_batch[-1], y)
@@ -278,13 +278,10 @@ def train_model_minibatch(epochs, mini_batch_size, X, y, layer_structure, learni
             """ 不同分辨率记录Loss """
             # costs.append(cost)  # Resolution1: 每个Epoch，所有mini-batch记录一次
 
-            if (i % 100 == 0) and (k % 1 == 0):  # Resolution2: 每100个epoch，所有mini记录一次
-                print("Loss at {}-th epoch's {}-th mini-batch is {}".format(i + 1, k + 1, cost))
-                costs.append(cost)  # mini-batch后的Loss, 每3个mini记录一次Loss. 可视化效果较好
-
+            if (i % 100 == 0) and (k % 1 == 0):  # Resolution2: 每100个epoch，所有mini记录一次. 可视化效果较好
             # if (i % 100 == 0) and (k % 3 == 0):  # Resolution3: 每100个epoch，每3个mini记录一次
-            #     print("Loss at {}-th epoch's {}-th mini-batch is {}".format(i + 1, k + 1, cost))
-            #     costs.append(cost)
+                print("Loss at {}-th epoch's {}-th mini-batch is {}".format(i + 1, k + 1, cost))
+                costs.append(cost)
 
         # costs_epoch.append(cost)  # Resolution4: 每个epoch第1个mini-batch记录一次
 
@@ -323,7 +320,7 @@ def plot_decision_boundary(pred_func):
 if __name__=='__main__':
     """ 生成数据. 采用CS231 demo中的3分类数据 """
     np.random.seed(1)
-    N = 50  # 每个类中的样本点，3类共N * K点，每点D=2维
+    N = 200  # 每个类中的样本点，3类共N * K点，每点D=2维
     D = 2  # 每个点2个维度/属性
     K = 3  # 类别数
     X = np.zeros((N * K, D))  # 样本维度 (300, 2), data matrix (each row = single example)
@@ -361,12 +358,12 @@ if __name__=='__main__':
     start_time = datetime.datetime.now()
 
     # Batch GD
-    Weights_trained, biases_trained, costs = train_model(iterations, X.T, expected_output,
-                                                         layer_structure, learning_rate, activation_choice)
+    # Weights_trained, biases_trained, costs = train_model(iterations, X.T, expected_output,
+    #                                                      layer_structure, learning_rate, activation_choice)
 
     # Mini-Batch GD
-    # Weights_trained, biases_trained, costs = train_model_minibatch(epochs, mini_batch_size, X.T, expected_output,
-    #                                                                layer_structure, learning_rate, activation_choice)
+    Weights_trained, biases_trained, costs = train_model_minibatch(epochs, mini_batch_size, X.T, expected_output,
+                                                                   layer_structure, learning_rate, activation_choice)
 
     end_time = datetime.datetime.now()
     duration = end_time - start_time
