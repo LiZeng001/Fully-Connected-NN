@@ -1,8 +1,8 @@
 ## Implementation of a Fully Connected Neural Network
 
 - The layer numbers and the neurons of each layer are setable.
-- The activation fuction is choosenable, including Sigmoid, Relu and Tanh.
-- Batch Gradient Descent and Mini-batch Gradient Descent Optimizer are privided, of which the iteration times, mini-batch size are setable.
+- The activation function is choosenable, including Sigmoid, Relu and Tanh.
+- Batch Gradient Descent and Mini-batch Gradient Descent Optimizer are provided, of which the iteration times, mini-batch size are setable.
 - Performance and Decision boundary visulizations are provided.
 
 Functions:
